@@ -39,3 +39,11 @@ export async function scanTicket({token}) {
     const { data } = await http.post('/checkin/scan',{token})
     return data
 }
+export async function getOccupiedSeats(eventId) {
+  try {
+    const { data } = await http.get(`/events/${eventId}/occupied`)
+    return data
+  } catch {
+    return { occupied: [] }
+  }
+}
