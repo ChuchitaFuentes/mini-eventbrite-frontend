@@ -8,7 +8,7 @@ const http = axios.create({
 
 http.interceptors.request.use((config)=>{
     const {token} = useAuth.getState()
-    if (token) config.headers.Authorization = `Baerer ${token}`
+    if (token) config.headers.Authorization = `Bearer ${token}`
     return config
 })
 
