@@ -3,46 +3,56 @@ import Card from '../components/Card'
 import { createEvent } from '../services/api'
 
 export default function CreateEvent() {
-    const [form, setForm] = useState({
-        title: '',
-        description: '',
-        date: '',
-        venue: '',
-        imageUrl: '',
-        seatMap: { type: 'ga', rows: 1, cols: 1 },
-        price: 0,
-        isPublished: false
-    })
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
-    const [ok, setOk] = useState(null)
+  const [form, setForm] = useState({
+    title: '',
+    description: '',
+    date: '',
+    venue: '',
+    imageUrl: '',
+    seatMap: { type: 'ga', rows: 1, cols: 1 },
+    price: 0,
+    isPublished: false
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+  const [ok, setOk] = useState(null)
 
-    const onChange = (e) => {
-        const { name, value, type, checked } = e.target
-        if (name.startsWith('seatMap.')) {
-        const key = name.split('.')[1]
-        setForm((f) => ({ ...f, seatMap: { ...f.seatMap, [key]: key === 'type' ? value : Number(value) } }))
-        } else {
-        setForm((f) => ({ ...f, [name]: type === 'checkbox' ? checked : value }))
-        }
+  const onChange = (e) => {
+    const { name, value, type, checked } = e.target
+    if (name.startsWith('seatMap.')) {
+      const key = name.split('.')[1]
+      setForm((f) => ({ ...f, seatMap: { ...f.seatMap, [key]: key === 'type' ? value : Number(value) } }))
+    } else {
+      setForm((f) => ({ ...f, [name]: type === 'checkbox' ? checked : value }))
     }
+  }
 
-    const submit = async (e) => {
-        e.preventDefault()
-        setLoading(true); setError(null); setOk(null)
-        try {
-        const payload = { ...form, date: new Date(form.date).toISOString() }
-        const res = await createEvent(payload)
-        setOk(`Evento creado: ${res?.item?.title} (${res?.item?._id})`)
-        } catch (e2) {
-        setError(e2.message)
-        } finally {
-        setLoading(false)
-        }
+  const submit = async (e) => {
+    e.preventDefault()
+    setLoading(true);
+    setError(null);
+    setOk(null)
+    try {
+      const payload = {
+        ...form,
+        date: new Date(form.date).toISOString(),
+        price: Number(form.price)
+      }
+
+      //console.log("Payload que se enviará al backend:", JSON.stringify(payload, null, 2));
+      const res = await createEvent(payload)
+
+
+      setOk(`Evento creado: ${res?.item?.title} (${res?.item?._id})`)
+    } catch (e2) {
+      setError(e2.message)
+    } finally {
+      setLoading(false)
     }
+  }
 
 
-    return (
+  return (
     <div className="max-w-2xl mx-auto">
       <Card>
         <h1 className="text-2xl font-semibold mb-4">Crear evento</h1>
