@@ -39,7 +39,6 @@ export default function CreateEvent() {
         price: Number(form.price)
       }
 
-      //console.log("Payload que se enviará al backend:", JSON.stringify(payload, null, 2));
       const res = await createEvent(payload)
 
 
@@ -87,15 +86,26 @@ export default function CreateEvent() {
                 <option value="grid">Grid</option>
               </select>
             </div>
-            <div>
-              <label className="label">Filas</label>
-              <input className="input" type="number" min="1" name="seatMap.rows" value={form.seatMap.rows} onChange={onChange} />
-            </div>
-            <div>
-              <label className="label">Columnas</label>
-              <input className="input" type="number" min="1" name="seatMap.cols" value={form.seatMap.cols} onChange={onChange} />
-            </div>
+            {form.seatMap.type === 'grid' && (
+              <>
+                <div>
+                  <label className="label">Filas</label>
+                  <input className="input" type="number" min="1" max="10" name="seatMap.rows" value={form.seatMap.rows} onChange={onChange} />
+                </div>
+                <div>
+                  <label className="label">Columnas</label>
+                  <input  className="input" type="number" min="1" max="10" name="seatMap.cols" value={form.seatMap.cols} onChange={onChange} />
+                </div>
+              </>
+            )}
+            {form.seatMap.type === 'ga' && (
+              <div>
+                <label className="label">Capacidad</label>
+                <input className="input" type="number" min="1" name="seatMap.capacity" value={form.seatMap.capacity || 1} onChange={onChange}/>
+              </div>
+            )}
           </div>
+
           <div className="grid md:grid-cols-3 gap-4">
             <div>
               <label className="label">Precio</label>
